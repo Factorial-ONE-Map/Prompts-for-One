@@ -1,0 +1,73 @@
+/* ONE Map · estilos compartidos de las páginas nuevas (Planes, Pitch deck, Legal).
+ * Brand Refresh 2026: Sunrise con grano, superficies blancas, Midnight solo como texto. */
+:root{
+  --red:#FF355E; --r140:#C60F35; --r40:#FFAEBF; --r10:#FFE3EA;
+  --ink:#25253D; --ink-2:#6C6C7D; --ink-3:#8F8FA0; --ink-50:#F6F6F8;
+  --line:#E3E3EF; --panel:#FFFFFF; --bg:#FFFFFF; --m20:#E3E3EF;
+  --sb-ink:#6C6C7D; --sb-hover:#F6F6F8; --sb-ink-strong:#25253D;
+  --sunrise:linear-gradient(125deg,#FFC155 0%,#FF355E 20%,#FF355E 80%,#D2D9F9 100%);
+  --grain:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  --font:'DM Sans',ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  --ease:cubic-bezier(.2,.8,.2,1);
+  color-scheme:light;
+}
+:root[data-theme="dark"]{
+  --ink:#F1F1F5; --ink-2:#B4B4C2; --ink-3:#8F8FA0; --ink-50:#24243C; --r10:#3A1D2A; --r140:#FF8FA6;
+  --line:#36364F; --panel:#1C1C31; --bg:#13131F; --m20:#36364F;
+  --sb-ink:#B4B4C2; --sb-hover:#24243C; --sb-ink-strong:#F1F1F5;
+  color-scheme:dark;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --ink:#F1F1F5; --ink-2:#B4B4C2; --ink-3:#8F8FA0; --ink-50:#24243C; --r10:#3A1D2A; --r140:#FF8FA6;
+  --line:#36364F; --panel:#1C1C31; --bg:#13131F; --m20:#36364F;
+  --sb-ink:#B4B4C2; --sb-hover:#24243C; --sb-ink-strong:#F1F1F5;
+  color-scheme:dark;
+}}
+*,*::before,*::after{box-sizing:border-box}
+html{background:var(--bg)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:16px;line-height:1.45;letter-spacing:-0.03em;-webkit-font-smoothing:antialiased}
+button,select,input{font:inherit;color:inherit;letter-spacing:inherit}
+a{color:inherit}
+:focus-visible{outline:3px solid rgba(255,53,94,.3);outline-offset:2px}
+h1,h2,h3{font-weight:500;margin:0;text-wrap:balance}
+p{margin:0}
+
+/* menú del sitio */
+.sitebar{display:flex;align-items:center;gap:4px;padding:10px 12px 0;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.sitebar::-webkit-scrollbar{display:none}
+.sitebar a{flex:none;font-size:14px;font-weight:500;line-height:1;color:var(--sb-ink);text-decoration:none;padding:9px 14px;border-radius:999px;white-space:nowrap;transition:background .15s,color .15s}
+.sitebar a:hover{background:var(--sb-hover);color:var(--sb-ink-strong)}
+.sitebar a[aria-current="page"]{background:#FF355E;color:#fff}
+
+/* cabecera Sunrise enmarcada, como el mapa */
+.sunrise{position:relative;background:var(--sunrise);color:#fff;isolation:isolate}
+.sunrise::before{content:"";position:absolute;inset:0;background-image:var(--grain);opacity:.07;mix-blend-mode:overlay;pointer-events:none;z-index:-1}
+.sunrise :focus-visible{outline-color:rgba(255,255,255,.9)}
+.head{margin:12px;border-radius:20px;overflow:hidden}
+.head-in{max-width:1200px;margin:0 auto;padding:28px clamp(20px,5vw,64px) 48px;display:grid;gap:28px}
+.head-top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.head-top small{font-size:13px;font-weight:300}
+.head-tools{display:flex;align-items:center;gap:10px}
+.logo{height:18px;width:auto;color:#fff;display:block}
+.head h1{font-size:clamp(34px,5vw,64px);line-height:.98;max-width:16ch}
+.head .lede{font-size:clamp(16px,1.5vw,19px);font-weight:300;max-width:60ch;margin-top:14px}
+.tbtn{appearance:none;border:1px solid #fff;background:transparent;color:#fff;border-radius:999px;height:30px;min-width:30px;padding:0 10px;display:inline-flex;align-items:center;justify-content:center;gap:6px;cursor:pointer;font-size:13px;font-weight:500;text-decoration:none}
+.tbtn:hover{background:rgba(255,255,255,.2)}
+.tbtn select{appearance:none;-webkit-appearance:none;border:0;background:transparent;color:#fff;font-size:13px;font-weight:500;cursor:pointer;outline:none;padding-right:2px}
+.tbtn select option{color:#25253D;background:#fff}
+
+/* secciones */
+.wrap{max-width:1200px;margin:0 auto;padding:0 clamp(16px,5vw,64px)}
+section.blk{padding:56px 0 8px}
+.eb{font-size:13px;color:var(--ink-3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px}
+.blk h2{font-size:clamp(26px,3.2vw,40px);line-height:1.02;letter-spacing:-0.035em;margin-bottom:12px}
+.blk .sl{font-size:17px;color:var(--ink-2);max-width:62ch;margin-bottom:28px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:22px}
+.soft{background:var(--ink-50);border-radius:20px;padding:20px 22px}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:500;border-radius:999px;padding:3px 10px;background:var(--r10);color:var(--r140)}
+.btn{appearance:none;border:0;display:inline-flex;align-items:center;gap:8px;background:var(--red);color:#fff;text-decoration:none;font-size:15px;font-weight:500;padding:11px 20px;border-radius:999px;cursor:pointer;transition:background .2s var(--ease)}
+.btn:hover{background:#C60F35}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.btn.ghost:hover{background:var(--ink-50)}
+footer.foot{margin-top:72px;padding:28px clamp(16px,5vw,64px) 40px;color:var(--ink-2);font-size:13.5px;text-align:center}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}

@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Factorial · Prompts for One</title>
+<script>(function(){var t=new URLSearchParams(location.search).get("theme");try{if(t!=="dark"&&t!=="light")t=localStorage.getItem("onemap-theme")}catch(e){}if(t==="dark"||t==="light")document.documentElement.setAttribute("data-theme",t)})();</script>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap">
+<link rel="stylesheet" href="site.css">
+<style>
+/* cabecera: título a la izquierda, buscador a la derecha */
+.head-in{gap:22px;padding-bottom:36px}
+.hrow{display:grid;grid-template-columns:minmax(0,1fr) minmax(260px,380px);gap:24px 40px;align-items:end}
+.head h1{max-width:none}
+.srch{display:grid;gap:6px}
+.srch label{font-size:13px;font-weight:500}
+.srch input{appearance:none;border:1px solid rgba(255,255,255,.7);background:#fff;color:#25253D;border-radius:999px;padding:11px 16px;font-size:15px;width:100%}
+.srch input::placeholder{color:#8F8FA0}
+.srch input:focus{outline:3px solid rgba(255,255,255,.55);outline-offset:1px}
+
+/* ¿Quién eres? */
+.who{padding:28px 0 26px;border-bottom:1px solid var(--line)}
+.who h2{font-size:15px;font-weight:500;letter-spacing:-0.01em;margin-bottom:12px}
+.roles{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px}
+.rc{appearance:none;cursor:pointer;text-align:left;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:14px;padding:11px 12px 12px;display:grid;gap:4px;align-content:start;min-height:78px;transition:border-color .15s,background .15s}
+.rc:hover{border-color:var(--red)}
+.rc .t{display:flex;justify-content:space-between;gap:8px;font-size:15px;font-weight:500}
+.rc .t .n{font-size:12.5px;font-weight:400;color:var(--ink-3)}
+.rc .d{font-size:12px;line-height:1.3;color:var(--ink-2)}
+.rc[aria-pressed="true"]{background:var(--red);border-color:var(--red);color:#fff}
+.rc[aria-pressed="true"] .d,.rc[aria-pressed="true"] .t .n{color:rgba(255,255,255,.88)}
+.rc[disabled]{opacity:.45;cursor:default}
+
+/* cuerpo: módulos a la izquierda, prompts a la derecha */
+.body{display:grid;grid-template-columns:200px minmax(0,1fr);gap:40px;padding-top:28px}
+.side{position:sticky;top:16px;align-self:start;display:grid;gap:2px}
+.side .lb{font-size:12px;color:var(--ink-3);margin:0 0 8px 10px}
+.side a{display:flex;justify-content:space-between;gap:10px;font-size:14px;color:var(--ink);text-decoration:none;padding:9px 10px;border-radius:10px;border-left:3px solid transparent}
+.side a:hover{background:var(--ink-50)}
+.side a .n{font-size:12.5px;color:var(--ink-3)}
+.side a.on{background:var(--r10);border-left-color:var(--red);color:var(--r140);font-weight:500}
+.side a.off{color:var(--ink-3);pointer-events:none}
+.side hr{border:0;border-top:1px solid var(--line);margin:6px 10px}
+.bar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:6px}
+.bar .sum{font-size:14px;color:var(--ink-2)}
+.seg{display:inline-flex;background:var(--ink-50);border-radius:999px;padding:3px}
+.seg button{appearance:none;border:0;background:transparent;color:var(--ink-2);cursor:pointer;border-radius:999px;padding:6px 14px;font-size:13px;font-weight:500}
+.seg button[aria-pressed="true"]{background:var(--panel);color:var(--ink);box-shadow:0 1px 3px rgba(37,37,61,.12)}
+
+.mod{padding-top:30px;scroll-margin-top:16px}
+.mod>h3{font-size:clamp(24px,2.4vw,30px);letter-spacing:-0.035em;margin-bottom:4px;display:flex;align-items:baseline;gap:10px}
+.mod>h3 .n{font-size:13px;font-weight:400;color:var(--ink-2);letter-spacing:0}
+.mod>.ms{font-size:14px;color:var(--ink-2);margin:0 0 6px}
+.topic{margin-top:18px}
+.kind{margin-top:22px}
+.kind+.kind{margin-top:34px}
+.kl{margin:0;font-size:12px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--r140);display:flex;gap:8px;align-items:baseline}
+.kl .n{color:var(--ink-3);letter-spacing:0}
+.kind .topic:first-of-type{margin-top:10px}
+.topic h4{margin:0;padding-bottom:8px;border-bottom:1px solid var(--line);font-size:13px;font-weight:500;color:var(--ink-2);display:flex;justify-content:space-between;gap:12px}
+.topic h4 a{font-weight:400;color:var(--r140);text-decoration:none}
+.topic h4 a:hover{text-decoration:underline}
+.pl{list-style:none;margin:0;padding:0}
+.pr{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:5px 18px;align-items:start;padding:14px 0 13px;border-bottom:1px solid var(--line)}
+.pr .q{font-size:16px;line-height:1.4;margin:0;font-weight:500;letter-spacing:-0.02em}
+.pr .o{grid-column:1;font-size:13.5px;color:var(--ink-2);margin:0}
+.pr .meta{grid-column:1;display:flex;flex-wrap:wrap;gap:5px;align-items:center;margin-top:3px}
+.tag{font-size:11.5px;font-weight:500;border-radius:6px;padding:2px 7px;background:var(--ink-50);color:var(--ink-2)}
+.tag.act{background:var(--r10);color:var(--r140)}
+.tag.star{background:#FFF1D6;color:#8A5A00}
+:root[data-theme="dark"] .tag.star{background:#3A2E14;color:#FFC155}
+.tag.where{background:transparent;color:var(--ink-3);padding-left:2px}
+.ph{color:var(--red);font-weight:500}
+.copy{grid-row:1/span 3;grid-column:2;appearance:none;cursor:pointer;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:999px;height:32px;padding:0 13px;font-size:13px;font-weight:500;display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.copy:hover{border-color:var(--red);color:var(--r140)}
+.copy.ok{background:var(--red);border-color:var(--red);color:#fff}
+
+/* escenarios: desplegables */
+.scl{display:grid;gap:10px;margin:12px 0 4px}
+details.sc{background:var(--panel);border:1px solid var(--line);border-radius:18px;transition:border-color .15s}
+details.sc:hover,details.sc[open]{border-color:var(--r40)}
+details.sc>summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:14px;align-items:center;padding:16px 18px}
+details.sc>summary::-webkit-details-marker{display:none}
+details.sc>summary:focus-visible{outline:3px solid rgba(255,53,94,.3);outline-offset:2px;border-radius:18px}
+.sh{display:grid;gap:6px}
+.sc .dom{font-size:12.5px;font-weight:500;color:var(--r140)}
+.sc .tt{font-size:19px;font-weight:500;letter-spacing:-0.03em;line-height:1.2}
+.sc .meta{display:flex;flex-wrap:wrap;gap:5px}
+.car{width:36px;height:36px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center;color:var(--ink-2);transition:transform .2s var(--ease),background .15s}
+details.sc[open] .car{transform:rotate(180deg);background:var(--r10);color:var(--r140);border-color:var(--r10)}
+.sb{padding:2px 18px 18px;display:grid;gap:10px;border-top:1px solid var(--line);margin:0 18px;padding-left:0;padding-right:0;padding-top:14px}
+.steps{list-style:none;margin:0;padding:0;display:grid;gap:10px;counter-reset:st}
+.steps li{counter-increment:st;display:grid;grid-template-columns:22px minmax(0,1fr) auto;gap:10px;align-items:start;font-size:14.5px;line-height:1.45}
+.steps li::before{content:counter(st);width:22px;height:22px;border-radius:50%;background:var(--ink-50);color:var(--ink);font-size:12px;font-weight:500;display:grid;place-items:center}
+.steps li.fu::before{content:"↪";background:var(--red);color:#fff}
+.steps .copy{grid-row:auto;grid-column:auto;height:28px;padding:0 10px;font-size:12px}
+.sc .fu-l{font-size:12px;font-weight:500;color:var(--ink-2);margin:2px 0 0}
+.sc .acts{display:flex;justify-content:flex-end}
+.more{margin-top:14px}
+.empty{padding:40px 0;text-align:center;color:var(--ink-2)}
+[hidden]{display:none!important}
+
+@media (max-width:1100px){ .roles{grid-template-columns:repeat(4,minmax(0,1fr))} }
+@media (max-width:860px){
+  .hrow{grid-template-columns:minmax(0,1fr)}
+  .roles{display:flex;overflow-x:auto;scrollbar-width:none;margin:0 -16px;padding:0 16px}
+  .roles::-webkit-scrollbar{display:none}
+  .rc{flex:0 0 150px}
+  .body{grid-template-columns:minmax(0,1fr);gap:8px}
+  .side{position:sticky;top:0;z-index:5;display:flex;overflow-x:auto;scrollbar-width:none;background:var(--bg);margin:0 -16px;padding:8px 16px;border-bottom:1px solid var(--line);gap:4px}
+  .side::-webkit-scrollbar{display:none}
+  .side .lb,.side hr{display:none}
+  .side a{flex:none;border-left:0;border-radius:999px;padding:7px 12px;border:1px solid var(--line);gap:6px}
+  .side a.on{border-color:var(--red)}
+  .mod{scroll-margin-top:64px}
+}
+@media (max-width:600px){
+  .pr{gap:5px 10px}
+  .pr .copy,.steps .copy{width:34px;height:34px;padding:0;justify-content:center}
+  .pr .copy span,.steps .copy span{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+  .pr .copy.ok,.steps .copy.ok{width:auto;padding:0 10px}
+  .pr .copy.ok span,.steps .copy.ok span{position:static;width:auto;height:auto;clip:auto}
+  .steps li{grid-template-columns:22px minmax(0,1fr) 34px}
+}
+</style>
+</head>
+<body>
+<header class="head sunrise">
+  <div class="head-in">
+    <div class="head-top">
+      <small id="t-eyebrow"></small>
+      <div class="head-tools">
+        <button class="tbtn" id="themeBtn" type="button" aria-label="Night mode" aria-pressed="false"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+        <label class="tbtn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.7 3.8 5.7 3.8 9s-1.3 6.3-3.8 9c-2.5-2.7-3.8-5.7-3.8-9S9.5 5.7 12 3z"/></svg><select id="langSel" aria-label="Idioma / Language"></select></label>
+      </div>
+    </div>
+    <div class="hrow">
+      <div>
+        <h1 id="t-title"></h1>
+        <p class="lede" id="t-lede"></p>
+      </div>
+      <div class="srch"><label for="q" id="t-searchLb"></label><input id="q" type="search" autocomplete="off"></div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="who">
+    <h2 id="t-who"></h2>
+    <div class="roles" id="roles" role="group"></div>
+  </section>
+
+  <div class="body">
+    <nav class="side" id="side" aria-label="Modules"></nav>
+    <div>
+      <div class="bar"><p class="sum" id="sum"></p><div class="seg" id="seg" role="group"></div></div>
+      <div id="content"></div>
+      <p class="empty" id="empty" hidden></p>
+    </div>
+  </div>
+</main>
+<footer class="foot" id="t-foot"></footer>
+
+<script src="site.js"></script>
+<script src="names.js"></script>
+<script src="data.js"></script>
+<script>
+(function () {
+  const lang = SITE.lang;
+  SITE.theme(document.getElementById('themeBtn')); SITE.langSelect(document.getElementById('langSel'));
+  document.documentElement.lang = lang;
+  const s = document.createElement('script');
+  s.src = 'i18n/' + lang + '.js';
+  s.onload = start;
+  s.onerror = () => { const f = document.createElement('script'); f.src = 'i18n/en.js'; f.onload = start; document.body.appendChild(f); };
+  document.body.appendChild(s);
+
+  /* textos propios de esta vista (el resto viene de i18n/<idioma>.js) */
+  const XT = {
+    es: { sumS: '{s} escenarios y {a} acciones para {r} · {m} módulos', steps: '{n} pasos', lede: 'Elige tu rol y recorre los módulos. Cambia lo que está en rojo por tus personas y fechas.', searchLb: 'Buscar prompts', searchPh: 'Prueba «baja», «nómina» o «dispositivos»', who: '¿Quién eres?', mods: 'Módulos', allMods: 'Todos los módulos', scen: 'Escenarios', scenSub: 'Preguntas encadenadas en una historia. Hazlas en orden y luego prueba el seguimiento.', sum: '{n} prompts para {r} · {m} módulos', all: 'Todos', qs: 'Preguntas', acts: 'Acciones', q: 'Pregunta', a: 'Acción', star: 'Imprescindible', more: 'Ver los {n} escenarios',
+      d: { all: 'La biblioteca completa', hr: 'Personas, contratos, nómina y beneficios', mgr: 'Tiempo, evaluaciones y gastos de tu equipo', emp: 'Tus ausencias, gastos y nómina', cfo: 'Gasto, coste laboral y renovaciones', ceo: 'Cifras de toda la empresa y riesgos', it: 'Dispositivos, software y seguridad' } },
+    en: { sumS: '{s} scenarios and {a} actions for {r} · {m} modules', steps: '{n} steps', lede: 'Pick your role, then browse by module. Swap the parts in red for your own people and dates.', searchLb: 'Search prompts', searchPh: 'Try “offboard”, “payroll” or “devices”', who: 'Who are you?', mods: 'Modules', allMods: 'All modules', scen: 'Scenarios', scenSub: 'Questions chained into a story. Ask them in order, then try the follow-up.', sum: '{n} prompts for {r} · {m} modules', all: 'All', qs: 'Questions', acts: 'Actions', q: 'Question', a: 'Action', star: 'Golden', more: 'See all {n} scenarios',
+      d: { all: 'The full library', hr: 'People, contracts, payroll and benefits', mgr: 'Your team’s time, reviews and spend', emp: 'Your time off, expenses and pay', cfo: 'Spend, labour cost and renewals', ceo: 'Company-wide numbers and risks', it: 'Devices, software and security' } },
+    de: { sumS: '{s} Szenarien und {a} Aktionen für {r} · {m} Module', steps: '{n} Schritte', lede: 'Wählen Sie Ihre Rolle und blättern Sie nach Modul. Ersetzen Sie die roten Teile durch Ihre eigenen Personen und Daten.', searchLb: 'Prompts durchsuchen', searchPh: 'Probieren Sie „Offboarding“, „Lohn“ oder „Geräte“', who: 'Wer sind Sie?', mods: 'Module', allMods: 'Alle Module', scen: 'Szenarien', scenSub: 'Fragen, die eine Geschichte erzählen. Stellen Sie sie der Reihe nach und probieren Sie dann die Folgefrage.', sum: '{n} Prompts für {r} · {m} Module', all: 'Alle', qs: 'Fragen', acts: 'Aktionen', q: 'Frage', a: 'Aktion', star: 'Top-Prompt', more: 'Alle {n} Szenarien anzeigen',
+      d: { all: 'Die ganze Bibliothek', hr: 'Personal, Verträge, Lohn und Benefits', mgr: 'Zeit, Beurteilungen und Ausgaben Ihres Teams', emp: 'Ihr Urlaub, Ihre Ausgaben und Ihr Gehalt', cfo: 'Ausgaben, Personalkosten und Verlängerungen', ceo: 'Unternehmenszahlen und Risiken', it: 'Geräte, Software und Sicherheit' } },
+    fr: { sumS: '{s} scénarios et {a} actions pour {r} · {m} modules', steps: '{n} étapes', lede: 'Choisissez votre rôle, puis parcourez les modules. Remplacez ce qui est en rouge par vos personnes et vos dates.', searchLb: 'Rechercher un prompt', searchPh: 'Essayez « départ », « paie » ou « appareils »', who: 'Qui êtes-vous ?', mods: 'Modules', allMods: 'Tous les modules', scen: 'Scénarios', scenSub: 'Des questions enchaînées en une histoire. Posez-les dans l’ordre, puis essayez la relance.', sum: '{n} prompts pour {r} · {m} modules', all: 'Tous', qs: 'Questions', acts: 'Actions', q: 'Question', a: 'Action', star: 'Incontournable', more: 'Voir les {n} scénarios',
+      d: { all: 'Toute la bibliothèque', hr: 'Salariés, contrats, paie et avantages', mgr: 'Temps, évaluations et dépenses de votre équipe', emp: 'Vos congés, notes de frais et votre paie', cfo: 'Dépenses, coût salarial et renouvellements', ceo: 'Chiffres de l’entreprise et risques', it: 'Appareils, logiciels et sécurité' } },
+    it: { sumS: '{s} scenari e {a} azioni per {r} · {m} moduli', steps: '{n} passaggi', lede: 'Scegli il tuo ruolo e sfoglia per modulo. Sostituisci le parti in rosso con le tue persone e le tue date.', searchLb: 'Cerca prompt', searchPh: 'Prova «offboarding», «buste paga» o «dispositivi»', who: 'Chi sei?', mods: 'Moduli', allMods: 'Tutti i moduli', scen: 'Scenari', scenSub: 'Domande concatenate in una storia. Falle in ordine, poi prova il follow-up.', sum: '{n} prompt per {r} · {m} moduli', all: 'Tutti', qs: 'Domande', acts: 'Azioni', q: 'Domanda', a: 'Azione', star: 'Imperdibile', more: 'Vedi tutti i {n} scenari',
+      d: { all: 'La libreria completa', hr: 'Persone, contratti, paghe e benefit', mgr: 'Tempo, valutazioni e spese del tuo team', emp: 'Le tue ferie, note spese e busta paga', cfo: 'Spesa, costo del lavoro e rinnovi', ceo: 'Numeri dell’azienda e rischi', it: 'Dispositivi, software e sicurezza' } },
+    pt: { sumS: '{s} cenários e {a} ações para {r} · {m} módulos', steps: '{n} passos', lede: 'Escolha o seu papel e percorra os módulos. Troque o que está a vermelho pelas suas pessoas e datas.', searchLb: 'Pesquisar prompts', searchPh: 'Experimente «saída», «salários» ou «dispositivos»', who: 'Quem é?', mods: 'Módulos', allMods: 'Todos os módulos', scen: 'Cenários', scenSub: 'Perguntas encadeadas numa história. Faça-as por ordem e depois experimente o seguimento.', sum: '{n} prompts para {r} · {m} módulos', all: 'Todos', qs: 'Perguntas', acts: 'Ações', q: 'Pergunta', a: 'Ação', star: 'Imprescindível', more: 'Ver os {n} cenários',
+      d: { all: 'A biblioteca completa', hr: 'Pessoas, contratos, salários e benefícios', mgr: 'Tempo, avaliações e despesas da equipa', emp: 'As suas férias, despesas e salário', cfo: 'Gastos, custo com pessoal e renovações', ceo: 'Números da empresa e riscos', it: 'Dispositivos, software e segurança' } },
+    'pt-br': { sumS: '{s} cenários e {a} ações para {r} · {m} módulos', steps: '{n} passos', lede: 'Escolha seu papel e navegue pelos módulos. Troque o que está em vermelho pelas suas pessoas e datas.', searchLb: 'Buscar prompts', searchPh: 'Experimente “desligamento”, “folha” ou “dispositivos”', who: 'Quem é você?', mods: 'Módulos', allMods: 'Todos os módulos', scen: 'Cenários', scenSub: 'Perguntas encadeadas em uma história. Faça na ordem e depois experimente o follow-up.', sum: '{n} prompts para {r} · {m} módulos', all: 'Todos', qs: 'Perguntas', acts: 'Ações', q: 'Pergunta', a: 'Ação', star: 'Essencial', more: 'Ver os {n} cenários',
+      d: { all: 'A biblioteca completa', hr: 'Pessoas, contratos, folha e benefícios', mgr: 'Tempo, avaliações e despesas da sua equipe', emp: 'Suas férias, despesas e salário', cfo: 'Gastos, custo de pessoal e renovações', ceo: 'Números da empresa e riscos', it: 'Dispositivos, software e segurança' } },
+    pl: { sumS: '{s} scenariuszy i {a} działań dla: {r} · moduły: {m}', steps: 'Kroki: {n}', lede: 'Wybierz swoją rolę i przeglądaj moduły. Zamień fragmenty na czerwono na własne osoby i daty.', searchLb: 'Szukaj promptów', searchPh: 'Spróbuj „offboarding”, „płace” lub „urządzenia”', who: 'Kim jesteś?', mods: 'Moduły', allMods: 'Wszystkie moduły', scen: 'Scenariusze', scenSub: 'Pytania ułożone w historię. Zadaj je po kolei, a potem wypróbuj pytanie uzupełniające.', sum: '{n} promptów dla: {r} · moduły: {m}', all: 'Wszystkie', qs: 'Pytania', acts: 'Działania', q: 'Pytanie', a: 'Działanie', star: 'Najważniejszy', more: 'Pokaż wszystkie scenariusze ({n})',
+      d: { all: 'Cała biblioteka', hr: 'Ludzie, umowy, płace i benefity', mgr: 'Czas, oceny i wydatki twojego zespołu', emp: 'Twoje urlopy, wydatki i wynagrodzenie', cfo: 'Wydatki, koszt pracy i odnowienia', ceo: 'Liczby całej firmy i ryzyka', it: 'Urządzenia, oprogramowanie i bezpieczeństwo' } }
+  };
+  function start() {
+    const L = window.PL, U = L.ui, D = window.PDATA, X = XT[lang] || XT.en;
+    const N = window.PNAMES[lang] || window.PNAMES.en;
+    const hubName = h => N.hubs[h] || h;
+    const modName = id => N.mods[id] || id;
+    const ROLES = [['hr', U.roleHr], ['mgr', U.roleMgr], ['emp', U.roleEmp], ['cfo', U.roleCfo], ['ceo', U.roleCeo], ['it', U.roleIt]];
+    const roleName = r => (ROLES.find(x => x[0] === r) || [r, r])[1];
+    const $ = id => document.getElementById(id);
+    const esc = t => String(t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+    const fmt = t => esc(t).replace(/\[([^\]]+)\]/g, '<span class="ph">[$1]</span>');
+    const fill = (t, o) => t.replace(/\{(\w+)\}/g, (_, k) => o[k]);
+
+    document.title = 'Factorial · ' + U.pageTitle;
+    [['t-eyebrow', U.eyebrow], ['t-title', U.h1], ['t-lede', X.lede], ['t-searchLb', X.searchLb], ['t-who', X.who], ['t-foot', U.foot], ['empty', U.empty]].forEach(([id, v]) => { $(id).textContent = v; });
+    $('q').placeholder = X.searchPh;
+
+    const st = { role: null, type: 'all', q: '', open: new Set() };
+    const copyIcon = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>';
+    const copyBtn = (text, label) => `<button class="copy" type="button" data-copy="${esc(text)}">${copyIcon}<span>${label || U.copy}</span></button>`;
+    const where = p => p.w ? `<span class="tag where">${p.w === 'gen' ? esc(U.whereGen) : esc(fill(U.whereSec, { m: modName(p.w) }))}</span>` : '';
+    const roleTags = r => r.map(x => `<span class="tag">${esc(roleName(x))}</span>`).join('');
+    const byRole = (x, r = st.role) => !r || x.r.includes(r);
+    const sText = x => { const t = L.s[x.id]; return [t.title, L.topics[x.t], ...t.q, ...t.fu].join(' ').toLowerCase(); };
+    const okS = x => st.type !== 'a' && byRole(x) && (!st.q || sText(x).includes(st.q));
+    const okP = p => st.type !== 's' && byRole(p) && (!st.q || L.p[p.id].join(' ').toLowerCase().includes(st.q));
+
+    const card = x => { const t = L.s[x.id], all = [...t.q, ...t.fu].join('\n'), open = st.open.has(x.id) || !!st.q;
+      return `<details class="sc" data-id="${x.id}" ${open ? 'open' : ''}><summary><span class="sh"><span class="dom">${esc(L.topics[x.t])}</span><span class="tt">${esc(t.title)}</span><span class="meta">${roleTags(x.r)}<span class="tag where">${esc(fill(X.steps, { n: t.q.length + t.fu.length }))}</span></span></span><span class="car" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span></summary>
+        <div class="sb"><ol class="steps">${t.q.map(q => `<li><span>${fmt(q)}</span>${copyBtn(q)}</li>`).join('')}</ol>
+        ${t.fu.length ? `<p class="fu-l">${esc(U.followUp)}</p><ol class="steps">${t.fu.map(q => `<li class="fu"><span>${fmt(q)}</span>${copyBtn(q)}</li>`).join('')}</ol>` : ''}
+        <div class="acts">${copyBtn(all, U.copyAll)}</div></div></details>`; };
+    const row = p => { const [q, o] = L.p[p.id];
+      return `<li class="pr"><p class="q">${fmt(q)}</p>${o ? `<p class="o">${esc(o)}</p>` : ''}<div class="meta"><span class="tag act">${esc(X.a)}</span>${roleTags(p.r)}${where(p)}</div>${copyBtn(q)}</li>`; };
+
+    function render() {
+      const cntR = r => D.scenarios.filter(x => byRole(x, r)).length + D.prompts.filter(p => byRole(p, r)).length;
+      $('roles').innerHTML = [[null, U.everyone, X.d.all], ...ROLES.map(([r, n]) => [r, n, X.d[r]])].map(([r, n, d]) => { const c = cntR(r);
+        return `<button class="rc" type="button" data-role="${r || ''}" aria-pressed="${st.role === r}" ${c ? '' : 'disabled'}><span class="t"><span>${esc(n)}</span><span class="n">${c}</span></span><span class="d">${esc(d)}</span></button>`; }).join('');
+      const S = D.scenarios.filter(okS), P = D.prompts.filter(okP);
+      const mods = D.hubs.map(h => ({ id: h.id, name: hubName(h.id), n: S.filter(x => x.h === h.id).length + P.filter(p => p.h === h.id).length }));
+      let html = '';
+      D.hubs.forEach(hub => {
+        const hs = S.filter(x => x.h === hub.id), hp = P.filter(p => p.h === hub.id); if (!hs.length && !hp.length) return;
+        html += `<section class="mod" id="m-${hub.id}"><h3>${esc(hubName(hub.id))} <span class="n">${esc([hs.length ? hs.length + ' ' + X.scen.toLowerCase() : '', hp.length ? hp.length + ' ' + X.acts.toLowerCase() : ''].filter(Boolean).join(' · '))}</span></h3>`;
+        /* primero los escenarios del módulo, después sus acciones */
+        const block = (items, draw, wrap, label) => { if (!items.length) return '';
+          let b = `<div class="kind"><p class="kl">${esc(label)} <span class="n">${items.length}</span></p>`;
+          hub.topics.forEach(tp => { const it = items.filter(x => x.t === tp.id); if (!it.length) return;
+            b += `<div class="topic"><h4><span>${esc(L.topics[tp.id])}</span></h4>${wrap(it.map(draw).join(''))}</div>`; });
+          return b + '</div>'; };
+        html += block(hs, card, x => `<div class="scl">${x}</div>`, X.scen) + block(hp, row, x => `<ul class="pl">${x}</ul>`, X.acts);
+        html += '</section>';
+      });
+      $('content').innerHTML = html;
+      $('empty').hidden = !!(S.length || P.length);
+      $('side').innerHTML = `<span class="lb">${esc(X.mods)}</span><a href="#top" data-go="top" class="on"><span>${esc(X.allMods)}</span><span class="n">${S.length + P.length}</span></a><hr>` +
+        mods.map(m => `<a href="#m-${m.id}" data-go="m-${m.id}" class="${m.n ? '' : 'off'}" ${m.n ? '' : 'aria-disabled="true" tabindex="-1"'}><span>${esc(m.name)}</span><span class="n">${m.n}</span></a>`).join('');
+      $('sum').textContent = fill(X.sumS, { s: S.length, a: P.length, r: st.role ? roleName(st.role) : U.everyone.toLowerCase(), m: mods.filter(m => m.n).length });
+      $('seg').innerHTML = [['all', X.all], ['s', X.scen], ['a', X.acts]].map(([k, n]) => `<button type="button" data-type="${k}" aria-pressed="${st.type === k}">${esc(n)}</button>`).join('');
+      spy();
+    }
+
+    /* módulo activo según el scroll */
+    function spy() {
+      const mob = innerWidth <= 860, y = mob ? 80 : 40; let cur = 'top';
+      if ($('content').getBoundingClientRect().top < y) document.querySelectorAll('.mod').forEach(sx => { if (sx.getBoundingClientRect().top < y + 40) cur = sx.id; });
+      let on = null; document.querySelectorAll('#side a').forEach(a => { const hit = a.dataset.go === cur; a.classList.toggle('on', hit); if (hit) on = a; });
+      if (mob && on && spy.last !== cur) $('side').scrollLeft = on.offsetLeft - 16;
+      spy.last = cur;
+    }
+    let raf; addEventListener('scroll', () => { cancelAnimationFrame(raf); raf = requestAnimationFrame(spy); }, { passive: true });
+
+    document.addEventListener('toggle', e => { const d = e.target; if (d.matches && d.matches('details.sc')) { if (d.open) st.open.add(d.dataset.id); else st.open.delete(d.dataset.id); } }, true);
+    document.addEventListener('click', e => {
+      const go = e.target.closest('#side a'); if (go) { e.preventDefault(); const id = go.dataset.go;
+        const t = id === 'top' ? document.querySelector('.who') : $(id);
+        if (t) { const off = innerWidth <= 860 ? 64 : 16; const y0 = scrollY, to = t.getBoundingClientRect().top + scrollY - off; scrollTo({ top: to, behavior: 'smooth' }); setTimeout(() => { if (scrollY === y0 && Math.abs(to - y0) > 2) scrollTo(0, to); }, 400); }
+        history.replaceState(null, '', location.pathname + location.search + (id === 'top' ? '' : '#' + id)); return; }
+      const r = e.target.closest('[data-role]'); if (r) { st.role = r.dataset.role || null; render(); return; }
+      const ty = e.target.closest('[data-type]'); if (ty) { st.type = ty.dataset.type; render(); return; }
+      const c = e.target.closest('.copy'); if (!c) return;
+      e.preventDefault();
+      const text = c.dataset.copy, done = () => { const sp = c.querySelector('span'), old = sp.textContent; c.classList.add('ok'); sp.textContent = U.copied; setTimeout(() => { c.classList.remove('ok'); sp.textContent = old; }, 1400); };
+      if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(text).then(done, () => fallback(text, done)); else fallback(text, done);
+    });
+    function fallback(text, done) { const t = document.createElement('textarea'); t.value = text; t.style.cssText = 'position:fixed;opacity:0'; document.body.appendChild(t); t.select(); try { document.execCommand('copy'); done(); } catch (e) {} t.remove(); }
+    let tm; $('q').addEventListener('input', e => { clearTimeout(tm); tm = setTimeout(() => { st.q = e.target.value.trim().toLowerCase(); render(); }, 120); });
+    render();
+    if (location.hash && $(location.hash.slice(1))) $(location.hash.slice(1)).scrollIntoView();
+  }
+})();
+</script>
+</body>
+</html>
